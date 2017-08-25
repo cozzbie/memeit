@@ -1,20 +1,20 @@
 <section class="ui container">
     <div class="nav">
-        
+        <div class="logo">MEMEIT.</div>
     </div>
 
     <div class="searchzone">
         <div class="ui fluid icon input">
-            <input type="text" placeholder="Search...">
+            <input type="text" placeholder="Search Tags...">
             <i class="search icon"></i>
         </div>
 
         <div class="populartags">
-            <span *ngFor="let tags of populartags" class="clickable">{{tags}}</span>
+            Popular Tags: <span class="tag" *ngFor="let tags of populartags" class="clickable">#{{tags}}</span>
         </div>
     </div>
 
     <div class="memes">
-        <div class="meme" *ngFor="let meme of memes; let idx = index" [ngClass]="{ short: idx % 2 == 0, long: idx % 3 == 0, mid: idx % 5 == 0 }"></div>
+        <div class="meme" *ngFor="let meme of memes; let idx = index"></div>
     </div>
 </section>

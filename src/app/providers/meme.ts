@@ -24,8 +24,13 @@ export class MemeService {
         return this.processObservable(obs);
     }
 
+    popular(): Observable<any> {
+        const obs = this.http.get(this.server + "api/memes");
+        return this.processObservable(obs);
+    }
+
     processObservable(obs: Observable<Object>): Observable<Object[]> {
         return obs.map((res: Response) => res.json())
-                    .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+                .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 }
