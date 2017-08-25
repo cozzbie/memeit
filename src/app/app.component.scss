@@ -1,0 +1,36 @@
+section {
+    min-height: 100vh;
+    padding: 1em;
+
+    div.nav {
+        width: 100%;
+        height: 10vh;
+    }
+
+    div.memes {
+        column-count: 4;
+        column-gap: 1em;
+        margin: 1em 0;
+
+        div.meme {
+            width: 100%;
+            margin: 0 0 1em;
+            break-inside: avoid;
+
+            &.short {
+                height: 8em;
+                background-color: pink;
+            }
+
+            &.mid {
+                height: 10em;
+                background-color: blue;
+            }
+
+            &.long {
+                height: 16em;
+                background-color: green;
+            }
+        }
+    }
+}

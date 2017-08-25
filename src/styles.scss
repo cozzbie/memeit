@@ -1,1 +1,90 @@
-/* You can add global styles to this file, and also import other style files */
+$red: #B71C1C;
+$indigo: #283593;
+$blue: #0277BD;
+$darkblue: #01579B;
+$brown: #4E342E;
+$darkbrown: #3E2723;
+
+body, html {
+    padding: 0;
+    margin: 0;
+    min-height: 100%;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Lato', sans-serif;
+    font-weight: normal !important;
+}
+
+.capitals {
+    text-transform: capitalize;
+}
+
+.small-text {
+    font-size: .9em;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.right {
+    text-align: right;
+}
+
+.text {
+    &-center {
+        text-align: center !important;
+    }
+
+    &-left {
+        text-align: left !important;
+    }
+
+    &-right {
+        text-align: right !important;
+    }
+}
+
+.inliner {
+    display: inline-block;
+}
+
+.place-middle {
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.red {
+    color: $red;
+}
+
+.blue {
+    color: $blue;
+}
+
+.darkblue {
+    color: $darkblue;
+}
+
+.brown {
+    color: $brown;
+}
+
+.darkbrown {
+    color: $darkbrown;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.padded {
+    padding: .5em;
+}
