@@ -23,13 +23,14 @@ section {
 
     div.memes {
         column-count: 4;
-        column-gap: 1em;
+        // column-gap: 1em;
         margin: 1em 0;
 
-        div.meme {
+        .meme {
             width: 100%;
             margin: 0 0 1em;
             break-inside: avoid;
+            overflow: hidden;
 
             &.short {
                 height: 8em;

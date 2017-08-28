@@ -5,16 +5,16 @@
 
     <div class="searchzone">
         <div class="ui fluid icon input">
-            <input type="text" placeholder="Search Tags...">
+            <input [formControl]="searchcontrol" name="searcher" type="text" placeholder="Search Tags...">
             <i class="search icon"></i>
         </div>
 
         <div class="populartags">
-            Popular Tags: <span class="tag" *ngFor="let tags of populartags" class="clickable">#{{tags}}</span>
+            Popular Tags: <span class="tag" *ngFor="let tag of populartags" (click)="settag(tag)" class="clickable">{{tag}}</span>
         </div>
     </div>
 
     <div class="memes">
-        <div class="meme" *ngFor="let meme of memes; let idx = index"></div>
+        <app-meme class="meme" *ngFor="let meme of memes; let idx = index" [meme]="meme"></app-meme>
     </div>
 </section>

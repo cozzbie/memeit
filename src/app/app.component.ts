@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MemeService } from "./providers/meme";
 import { Observable } from "rxjs/Rx";
-
+import { Meme } from "./interfaces/meme";
 import _ from "lodash";
 
 @Component({
@@ -12,16 +12,28 @@ import _ from "lodash";
 })
 export class AppComponent implements OnInit {
 
-    memes: string[] = _.range(20);
-    populartags: string[] = ["timi", "chrisse", "tiana", "marley", "bob"];
+    memes: Meme[] = [];
+    populartags: string[] = ["utilize", "intend", "envy"];
     searchcontrol: FormControl;
     newCurrent = 0;
 
-    constructor(private memesrv: MemeService){}
+    constructor(private memesrv: MemeService){
+        this.searchcontrol = new FormControl();
+    }
 
     ngOnInit(): void {
+        this.memesrv.popular()
+            .subscribe(d => {
+                if (d.status == 200) this.memes = d.data;
+            });
+
         this.beginLazyObserve()
-            .subscribe(d => {});
+            .switchMap(m => this.searchcontrol.value ? this.memesrv.find(m) : this.memesrv.popular())
+            .subscribe(d => {
+                if (d.status == 200) this.memes = this.memes.concat(d.data);
+            });
+
+        this.loadsearchcontrol();
     }
 
     runfirstqueues(): void {
@@ -36,8 +48,12 @@ export class AppComponent implements OnInit {
             .filter(y => y && y.length > 3)
             .switchMap(m => this.memesrv.find(m))
             .subscribe(d => {
-                if (d.status === 200) this.memes.concat(d.data);
+                if (d.status === 200) this.memes = d.data;
             });
+    }
+
+    settag(t): void {
+        this.searchcontrol.setValue(t);
     }
 
     // Watcher for lazy loading

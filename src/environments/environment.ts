@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  server: ""
+  server: "https://zikmemes-api.herokuapp.com/"
 };

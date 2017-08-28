@@ -11,10 +11,12 @@ import { AuthInterceptor } from './providers/auth-interceptor';
 import { MemeService } from './providers/meme';
 
 import { AppComponent } from './app.component';
+import { MemeComponent } from './components/meme/meme';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        MemeComponent
     ],
     imports: [
         BrowserModule,
