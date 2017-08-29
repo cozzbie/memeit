@@ -1,6 +1,11 @@
+<div class="clearback">
+    <div class="topcover"></div>
+    <img *ngIf="backimageset" class="animated fadeIn" [src]="imgbackie" alt="">
+</div>
+
 <section class="ui container">
     <div class="nav">
-        <div class="logo">MEMEIT.</div>
+        <div class="logo">MEMEIT<span style="display: inline-block;" class="animated bounce infinite">.</span></div>
     </div>
 
     <div class="searchzone">
@@ -10,11 +15,11 @@
         </div>
 
         <div class="populartags">
-            Popular Tags: <span class="tag" *ngFor="let tag of populartags" (click)="settag(tag)" class="clickable">{{tag}}</span>
+            Popular Tags &nbsp; <i class="area chart icon"></i>: <span *ngIf="!populartags.length">Loading</span> <span class="animated fadeIn tag" *ngFor="let tag of populartags" (click)="settag(tag.name)" class="clickable">{{tag.name}}</span>
         </div>
     </div>
 
     <div class="memes">
-        <app-meme class="meme" *ngFor="let meme of memes; let idx = index" [meme]="meme"></app-meme>
+        <app-meme class="meme" *ngFor="let meme of memes; let idx = index" [meme]="meme" [index]="idx" (hovered)="isHovered($event)"></app-meme>
     </div>
 </section>

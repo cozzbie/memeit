@@ -5,6 +5,8 @@ import { Observable } from "rxjs/Rx";
 import { Meme } from "./interfaces/meme";
 import _ from "lodash";
 
+declare var $: any;
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -13,22 +15,29 @@ import _ from "lodash";
 export class AppComponent implements OnInit {
 
     memes: Meme[] = [];
-    populartags: string[] = ["utilize", "intend", "envy"];
+    populartags: string[] = [];
     searchcontrol: FormControl;
-    newCurrent = 0;
+    newCurrent = 1;
+    imgbackie = "https://zikmemes.s3.amazonaws.com/banga.jpg";
+    backimageset = true;
 
     constructor(private memesrv: MemeService){
         this.searchcontrol = new FormControl();
     }
 
     ngOnInit(): void {
-        this.memesrv.popular()
+        this.memesrv.all()
             .subscribe(d => {
                 if (d.status == 200) this.memes = d.data;
             });
 
+        this.memesrv.popular()
+            .subscribe(d => {
+                if (d.status == 200) this.populartags = d.data;
+            });
+
         this.beginLazyObserve()
-            .switchMap(m => this.searchcontrol.value ? this.memesrv.find(m) : this.memesrv.popular())
+            .switchMap(m => this.searchcontrol.value ? this.memesrv.find(m) : this.memesrv.all())
             .subscribe(d => {
                 if (d.status == 200) this.memes = this.memes.concat(d.data);
             });
@@ -36,8 +45,11 @@ export class AppComponent implements OnInit {
         this.loadsearchcontrol();
     }
 
-    runfirstqueues(): void {
+    isHovered(e): void {
+        this.backimageset = false;
+        this.imgbackie = e;
 
+        setTimeout(() => this.backimageset = true, 10);
     }
 
     loadsearchcontrol(): void {
@@ -61,8 +73,8 @@ export class AppComponent implements OnInit {
         return Observable.fromEvent(window, "scroll")
             .map(() => window.scrollY)
             .filter(current => {
-                if ((current >= document.body.clientHeight - window.innerHeight) && current >= this.newCurrent) {
-                    this.newCurrent = current;
+                if (current >= (document.body.clientHeight * this.newCurrent)) {
+                    this.newCurrent++;
                     return true;
                 }
             })

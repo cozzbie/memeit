@@ -16,6 +16,11 @@ export class MemeService {
 
     constructor(private http: Http){}
 
+    all(): Observable<any> {
+        const obs = this.http.get(this.server + "api/memes");
+        return this.processObservable(obs);
+    }
+
     find(o: string): Observable<any> {
         const params = new URLSearchParams();
         const tags = _.map(_.split(o, /[,\s]\s*/), _.trim).join(",");
@@ -25,7 +30,7 @@ export class MemeService {
     }
 
     popular(): Observable<any> {
-        const obs = this.http.get(this.server + "api/memes");
+        const obs = this.http.get(this.server + "api/memes/popular_tags");
         return this.processObservable(obs);
     }
 
