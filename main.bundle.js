@@ -16,7 +16,7 @@ webpackEmptyContext.id = "../../../../../src async recursive";
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"ui container\">\n    <div class=\"nav\">\n        <div class=\"logo\">MEMEIT.</div>\n    </div>\n\n    <div class=\"searchzone\">\n        <div class=\"ui fluid icon input\">\n            <input [formControl]=\"searchcontrol\" name=\"searcher\" type=\"text\" placeholder=\"Search Tags...\">\n            <i class=\"search icon\"></i>\n        </div>\n\n        <div class=\"populartags\">\n            Popular Tags: <span class=\"tag\" *ngFor=\"let tag of populartags\" (click)=\"settag(tag)\" class=\"clickable\">{{tag}}</span>\n        </div>\n    </div>\n\n    <div class=\"memes\">\n        <app-meme class=\"meme\" *ngFor=\"let meme of memes; let idx = index\" [meme]=\"meme\"></app-meme>\n    </div>\n</section>\n"
+module.exports = "<div class=\"clearback\">\n    <div class=\"topcover\"></div>\n    <img *ngIf=\"backimageset\" class=\"animated fadeIn\" [src]=\"imgbackie\" alt=\"\">\n</div>\n\n<section class=\"ui container\">\n    <div class=\"nav\">\n        <div class=\"logo\">MEMEIT<span style=\"display: inline-block;\" class=\"animated bounce infinite\">.</span></div>\n    </div>\n\n    <div class=\"searchzone\">\n        <div class=\"ui fluid icon input\">\n            <input [formControl]=\"searchcontrol\" name=\"searcher\" type=\"text\" placeholder=\"Search Tags...\">\n            <i class=\"search icon\"></i>\n        </div>\n\n        <div class=\"populartags\">\n            Popular Tags &nbsp; <i class=\"area chart icon\"></i>: <span *ngIf=\"!populartags.length\">Loading</span> <span class=\"animated fadeIn tag\" *ngFor=\"let tag of populartags\" (click)=\"settag(tag.name)\" class=\"clickable\">{{tag.name}}</span>\n        </div>\n    </div>\n\n    <div class=\"memes\">\n        <app-meme class=\"meme\" *ngFor=\"let meme of memes; let idx = index\" [meme]=\"meme\" [index]=\"idx\" (hovered)=\"isHovered($event)\"></app-meme>\n    </div>\n</section>\n"
 
 /***/ }),
 
@@ -28,7 +28,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "section {\n  min-height: 100vh;\n  padding: 1em; }\n  section div.nav {\n    width: 100%;\n    height: 6vh; }\n    section div.nav .logo {\n      font-size: 2em;\n      font-weight: bold; }\n  section div.searchzone .populartags span {\n    display: inline-block;\n    padding: .5em; }\n  section div.memes {\n    -webkit-column-count: 4;\n            column-count: 4;\n    margin: 1em 0; }\n    section div.memes .meme {\n      width: 100%;\n      margin: 0 0 1em;\n      -webkit-column-break-inside: avoid;\n              break-inside: avoid;\n      overflow: hidden; }\n      section div.memes .meme.short {\n        height: 8em;\n        background-color: pink; }\n      section div.memes .meme.mid {\n        height: 10em;\n        background-color: blue; }\n      section div.memes .meme.long {\n        height: 16em;\n        background-color: green; }\n", ""]);
+exports.push([module.i, ".clearback {\n  width: 100%;\n  height: 100vh;\n  position: fixed;\n  z-index: -1;\n  background-color: black; }\n  .clearback img {\n    width: 100%;\n    height: 100%;\n    -o-object-fit: cover;\n       object-fit: cover; }\n  .clearback .topcover {\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    background-color: rgba(0, 0, 0, 0.7);\n    z-index: 100; }\n\nsection {\n  min-height: 100vh;\n  padding: 1em;\n  color: white; }\n  section div.nav {\n    width: 100%;\n    height: 6vh; }\n    section div.nav .logo {\n      font-size: 2em;\n      font-weight: bold; }\n  section div.searchzone .populartags span {\n    display: inline-block;\n    padding: .5em; }\n  section div.memes {\n    -webkit-column-count: 4;\n            column-count: 4;\n    margin: 1em 0; }\n    section div.memes .meme {\n      width: 100%;\n      margin: 0 0 1em;\n      -webkit-column-break-inside: avoid;\n              break-inside: avoid;\n      overflow: hidden; }\n      section div.memes .meme.short {\n        height: 8em;\n        background-color: pink; }\n      section div.memes .meme.mid {\n        height: 10em;\n        background-color: blue; }\n      section div.memes .meme.long {\n        height: 16em;\n        background-color: green; }\n", ""]);
 
 // exports
 
@@ -65,26 +65,37 @@ var AppComponent = (function () {
     function AppComponent(memesrv) {
         this.memesrv = memesrv;
         this.memes = [];
-        this.populartags = ["utilize", "intend", "envy"];
-        this.newCurrent = 0;
+        this.populartags = [];
+        this.newCurrent = 1;
+        this.imgbackie = "https://zikmemes.s3.amazonaws.com/banga.jpg";
+        this.backimageset = true;
         this.searchcontrol = new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */]();
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.memesrv.popular()
+        this.memesrv.all()
             .subscribe(function (d) {
             if (d.status == 200)
                 _this.memes = d.data;
         });
+        this.memesrv.popular()
+            .subscribe(function (d) {
+            if (d.status == 200)
+                _this.populartags = d.data;
+        });
         this.beginLazyObserve()
-            .switchMap(function (m) { return _this.searchcontrol.value ? _this.memesrv.find(m) : _this.memesrv.popular(); })
+            .switchMap(function (m) { return _this.searchcontrol.value ? _this.memesrv.find(m) : _this.memesrv.all(); })
             .subscribe(function (d) {
             if (d.status == 200)
                 _this.memes = _this.memes.concat(d.data);
         });
         this.loadsearchcontrol();
     };
-    AppComponent.prototype.runfirstqueues = function () {
+    AppComponent.prototype.isHovered = function (e) {
+        var _this = this;
+        this.backimageset = false;
+        this.imgbackie = e;
+        setTimeout(function () { return _this.backimageset = true; }, 10);
     };
     AppComponent.prototype.loadsearchcontrol = function () {
         var _this = this;
@@ -108,8 +119,8 @@ var AppComponent = (function () {
         return __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__["Observable"].fromEvent(window, "scroll")
             .map(function () { return window.scrollY; })
             .filter(function (current) {
-            if ((current >= document.body.clientHeight - window.innerHeight) && current >= _this.newCurrent) {
-                _this.newCurrent = current;
+            if (current >= (document.body.clientHeight * _this.newCurrent)) {
+                _this.newCurrent++;
                 return true;
             }
         })
@@ -191,7 +202,7 @@ AppModule = __decorate([
 /***/ "../../../../../src/app/components/meme/meme.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <img class=\"memeimage\" [src]=\"meme.url\" alt=\"\">\n</div>\n"
+module.exports = "<div class=\"cmeme\">\n    <img (mouseenter)=\"hasHovered()\" *ngIf=\"loaded\" class=\"memeimage animated fadeIn\" [src]=\"meme.url\" alt=\"\">\n</div>\n"
 
 /***/ }),
 
@@ -203,7 +214,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "img.memeimage {\n  width: 100%;\n  margin-bottom: .6em; }\n", ""]);
+exports.push([module.i, ".cmeme {\n  position: relative; }\n  .cmeme img.memeimage {\n    width: 100%;\n    margin-bottom: .6em; }\n", ""]);
 
 // exports
 
@@ -234,13 +245,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var MemeComponent = (function () {
     function MemeComponent() {
+        this.hovered = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */]();
         this.imger = "";
+        this.loaded = false;
+        this.borders = ["#EC407A", "#EF5350", "#AB47BC", "#42A5F5", "#5C6BC0", "#7E57C2"];
+        this.border = "";
     }
     MemeComponent.prototype.ngOnInit = function () {
-        // const image = new Image();
-        // image.src = this.meme.url;
-        // image.onload = () => {}
-        // image.onerror = () => console.log("Image failed to load");
+        var _this = this;
+        var image = new Image();
+        image.src = this.meme.url;
+        image.onload = function () { return _this.loaded = true; };
+        image.onerror = function () { return console.log("Image failed to load"); };
+        // this.border = this.borders[_.random(0, this.borders.length)];
+    };
+    MemeComponent.prototype.hasHovered = function () {
+        this.hovered.emit(this.meme.url);
     };
     return MemeComponent;
 }());
@@ -248,6 +268,14 @@ __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Input */])("meme"),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__interfaces_meme__["Meme"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__interfaces_meme__["Meme"]) === "function" && _a || Object)
 ], MemeComponent.prototype, "meme", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Input */])("index"),
+    __metadata("design:type", Object)
+], MemeComponent.prototype, "index", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_4" /* Output */])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */]) === "function" && _b || Object)
+], MemeComponent.prototype, "hovered", void 0);
 MemeComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
         selector: 'app-meme',
@@ -257,7 +285,7 @@ MemeComponent = __decorate([
     __metadata("design:paramtypes", [])
 ], MemeComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=meme.js.map
 
 /***/ }),
@@ -417,6 +445,10 @@ var MemeService = (function () {
         this.http = http;
         this.server = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].server;
     }
+    MemeService.prototype.all = function () {
+        var obs = this.http.get(this.server + "api/memes");
+        return this.processObservable(obs);
+    };
     MemeService.prototype.find = function (o) {
         var params = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["g" /* URLSearchParams */]();
         var tags = __WEBPACK_IMPORTED_MODULE_7_lodash___default.a.map(__WEBPACK_IMPORTED_MODULE_7_lodash___default.a.split(o, /[,\s]\s*/), __WEBPACK_IMPORTED_MODULE_7_lodash___default.a.trim).join(",");
@@ -425,7 +457,7 @@ var MemeService = (function () {
         return this.processObservable(obs);
     };
     MemeService.prototype.popular = function () {
-        var obs = this.http.get(this.server + "api/memes");
+        var obs = this.http.get(this.server + "api/memes/popular_tags");
         return this.processObservable(obs);
     };
     MemeService.prototype.processObservable = function (obs) {
