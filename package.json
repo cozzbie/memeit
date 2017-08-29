@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "bngh": "ng build --env=prod --base-ref /memeit/"
+    "bngh": "ng build --env=prod --base-href '/memeit/'"
   },
   "private": true,
   "dependencies": {
